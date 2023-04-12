@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'nl.TwoDots.placetowake'
+    namespace 'nl.twodots.placetowake'
     compileSdk 33
 
     defaultConfig {
-        applicationId "nl.TwoDots.placetowake"
+        applicationId "nl.twodots.placetowake"
         minSdk 24
         targetSdk 33
         versionCode 1

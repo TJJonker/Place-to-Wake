@@ -1,4 +1,4 @@
-package nl.TwoDots.placetowake.ui.theme
+package nl.twodots.placetowake.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme

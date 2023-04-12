@@ -1,4 +1,4 @@
-package nl.TwoDots.placetowake
+package nl.twodots.placetowake
 
 import org.junit.Test
 

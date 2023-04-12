@@ -1,4 +1,4 @@
-package nl.TwoDots.placetowake
+package nl.twodots.placetowake
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,7 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import nl.TwoDots.placetowake.ui.theme.PlaceToWakeTheme
+import nl.twodots.placetowake.ui.theme.PlaceToWakeTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
