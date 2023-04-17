@@ -1,4 +1,4 @@
-package nl.twodots.placetowake.bottom_navigation
+package nl.twodots.placetowake.bottomnavigation
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectableGroup

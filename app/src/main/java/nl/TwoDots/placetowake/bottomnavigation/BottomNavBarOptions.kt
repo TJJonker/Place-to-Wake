@@ -1,4 +1,4 @@
-package nl.twodots.placetowake.bottom_navigation
+package nl.twodots.placetowake.bottomnavigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.List
