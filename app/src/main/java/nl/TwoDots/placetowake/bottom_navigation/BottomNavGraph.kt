@@ -1,4 +1,4 @@
-package nl.twodots.placetowake
+package nl.twodots.placetowake.bottom_navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
@@ -10,11 +10,11 @@ import androidx.navigation.compose.composable
 fun BottomNavGraph(navController: NavHostController, paddingValues: PaddingValues) {
     NavHost(
         navController = navController,
-        startDestination = BottomNavBar.Home.route
+        startDestination = BottomNavBarOptions.Home.route
     ) {
-        composable(route = BottomNavBar.Home.route) { HomeScreen() }
-        composable(route = BottomNavBar.Alarms.route) { AlarmScreen() }
-        composable(route = BottomNavBar.Settings.route) { SettingsScreen() }
+        composable(route = BottomNavBarOptions.Home.route) { HomeScreen() }
+        composable(route = BottomNavBarOptions.Alarms.route) { AlarmScreen() }
+        composable(route = BottomNavBarOptions.Settings.route) { SettingsScreen() }
     }
 }
 
