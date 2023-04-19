@@ -17,7 +17,7 @@ class MainViewModel : ViewModel() {
 
     /** Keeps track of the state of the Search Text */
     private val _searchTextState: MutableState<String> =
-        mutableStateOf(value = "")
+        mutableStateOf("")
 
     /** Public getter method for the Search Text State */
     val searchTextState: State<String> = _searchTextState

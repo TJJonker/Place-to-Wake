@@ -64,8 +64,8 @@ private fun RowScope.AddSpacer() {
 @Composable
 private fun BottomNavigation(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colors.primarySurface,
-    contentColor: Color = contentColorFor(backgroundColor),
+    backgroundColor: Color = Color.White,
+    contentColor: Color = Color.DarkGray,
     elevation: Dp = BottomNavigationDefaults.Elevation,
     horizontalArrangement: Arrangement.HorizontalOrVertical = Arrangement.SpaceEvenly,
     content: @Composable RowScope.() -> Unit

@@ -4,40 +4,29 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.Image
+import androidx.compose.animation.*
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.FloatingActionButtonDefaults.elevation
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.AccountCircle
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.*
+import nl.twodots.placetowake.addalarm.AddAlarmTab
 import nl.twodots.placetowake.bottomnavigation.BottomBar
 import nl.twodots.placetowake.bottomnavigation.BottomNavGraph
 import nl.twodots.placetowake.models.MainViewModel
 import nl.twodots.placetowake.searchwidget.AppSearchBar
-import nl.twodots.placetowake.searchwidget.SearchBar
 import nl.twodots.placetowake.ui.theme.PlaceToWakeTheme
 
 class MainActivity : ComponentActivity() {
@@ -46,7 +35,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             PlaceToWakeTheme {
                 MainScreen(mainViewModel = mainViewModel)
@@ -63,7 +51,8 @@ fun Map() {
     }
     GoogleMap(
         modifier = Modifier.fillMaxSize(),
-        cameraPositionState = cameraPositionState
+        cameraPositionState = cameraPositionState,
+        uiSettings = MapUiSettings(zoomControlsEnabled = false)
     ) {
         Marker(
             state = MarkerState(position = singapore),
@@ -73,6 +62,7 @@ fun Map() {
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun MainScreen(mainViewModel: MainViewModel) {
 
@@ -81,24 +71,48 @@ private fun MainScreen(mainViewModel: MainViewModel) {
     val searchWidgetState by mainViewModel.searchWidgetState
     val searchTextState by mainViewModel.searchTextState
 
+    var newAlarmScreenOpened by remember { mutableStateOf(false) }
+
     Scaffold(
-        topBar = {AppSearchBar(mainViewModel)},
-        bottomBar = { BottomBar(navController = navController) },
+        bottomBar = {
+            AnimatedVisibility(
+                visible = !newAlarmScreenOpened,
+                enter = slideInVertically(initialOffsetY = { it / 2 }),
+                exit = slideOutVertically(targetOffsetY = { it })
+            ) {
+                BottomBar(navController = navController)
+            }
+        },
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true,
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add icon")
+            AnimatedVisibility(
+                visible = !newAlarmScreenOpened,
+                exit = scaleOut(),
+            ) {
+                FloatingActionButton(
+                    onClick = { newAlarmScreenOpened = true },
+                    elevation = elevation(
+                        pressedElevation = 0.dp,
+                    )
+                )
+                {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add icon",
+                        tint = Color.White
+                    )
+                }
             }
         }
     ) {
         BottomNavGraph(navController = navController, it)
+
+        /** Main screen. */
+        Map()
+        AppSearchBar(mainViewModel)
+
+        /** Add new alarm screen. */
+        AddAlarmTab(newAlarmScreenOpened = newAlarmScreenOpened)
     }
-}
-
-
-@Preview
-@Composable
-fun SearchBarPreview() {
-    SearchBar(text = "", onTextChange = {}, onCloseClicked = {}, onSearchClicked = {})
 }
