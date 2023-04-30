@@ -15,9 +15,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import nl.twodots.placetowake.R
 import nl.twodots.placetowake.models.MainViewModel
 import nl.twodots.placetowake.utils.clearFocusOnKeyboardDismiss
 
@@ -80,9 +82,10 @@ fun SearchBar(
                     onClick = { /*TODO*/ }
                 ) {
                     Icon(
+                        modifier = Modifier.height(32.dp).width(32.dp),
                         imageVector = Icons.Default.AccountCircle,
                         contentDescription = "Profile Icon",
-                        tint = Color.Blue
+                        tint = colorResource(id = R.color.primary)
                     )
                 }
             },

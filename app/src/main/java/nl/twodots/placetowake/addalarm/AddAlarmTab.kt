@@ -1,23 +1,42 @@
-package nl.twodots.placetowake.addalarm
+package nl.TwoDots.placetowake.addalarm
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
-import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import nl.twodots.placetowake.utils.CircularSlider
+import androidx.compose.ui.unit.sp
+import nl.twodots.placetowake.R
 import nl.twodots.placetowake.utils.clearFocusOnKeyboardDismiss
 
 @Composable
@@ -87,7 +106,7 @@ private fun AlarmTabContent(modifier: Modifier) {
             }
         }
 
-        TextField(
+        OutlinedTextField(
             modifier = modifier
                 .fillMaxWidth(),
             colors = TextFieldDefaults.textFieldColors(
@@ -111,20 +130,59 @@ private fun AlarmTabContent(modifier: Modifier) {
             }
         )
 
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = "Alarm trigger",
-                        color = Color.Gray
-                    )
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .selectableGroup()
+        Column(modifier = Modifier.padding(vertical = 12.dp)) {
+            Text(
+                text = "Alarm trigger",
+                modifier = Modifier.padding(vertical = 8.dp),
+                fontSize = 12.sp,
+                color = Color.Black
+            )
+
+            var currentTriggerOption by remember { mutableStateOf(0) }
+            val triggerOptions = listOf("On Enter", "On Exit")
+            val triggerIcons = listOf(R.drawable.ic_enter, R.drawable.ic_exit)
+            Column(modifier = Modifier.selectableGroup()) {
+                triggerOptions.forEachIndexed { index, item ->
+                    var selected = index == currentTriggerOption
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.selectable(
+                            selected = selected,
+                            onClick = { currentTriggerOption = index },
+                            role = Role.RadioButton
+                        )
                     ) {
-                        Text(text = "On Enter", color = Color.DarkGray)
-                        Text(text = "On Exit", color = Color.DarkGray)
+                        Surface(
+                            shape = RoundedCornerShape(12.dp),
+                            color = if (selected)
+                                colorResource(id = R.color.primary)
+                            else
+                                Color.Transparent,
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(8.dp, 8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+
+                                Icon(
+                                    painter = painterResource(id = triggerIcons[index]),
+                                    contentDescription = "",
+                                    tint = if (selected)
+                                        Color.White
+                                    else
+                                        Color.Black,
+                                    modifier = Modifier.padding(end = 8.dp)
+                                )
+                                Text(
+                                    fontWeight = FontWeight.SemiBold,
+                                    text = item,
+                                    color = if (selected)
+                                        Color.White
+                                    else
+                                        Color.Black,
+                                )
+                            }
+                        }
                     }
                 }
             }

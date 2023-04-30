@@ -5,9 +5,10 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-import com.google.accompanist.systemuicontroller.SystemUiController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import nl.TwoDots.placetowake.ui.theme.Purple200
+import nl.TwoDots.placetowake.ui.theme.Purple500
+import nl.TwoDots.placetowake.ui.theme.Purple700
+import nl.TwoDots.placetowake.ui.theme.Teal200
 
 private val DarkColorPalette = darkColors(
     primary = Purple200,
