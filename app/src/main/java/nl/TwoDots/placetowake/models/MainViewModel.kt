@@ -22,7 +22,7 @@ class MainViewModel : ViewModel() {
     /** Public getter method for the Search Text State */
     val searchTextState: State<String> = _searchTextState
 
-    
+
 
     /** Updates the Search Widget State */
     fun updateSearchWidgetState(newValue: SearchWidgetState){

@@ -5,17 +5,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.*
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.FloatingActionButtonDefaults.elevation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
@@ -45,9 +41,9 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Map() {
-    val singapore = LatLng(52.488515, 4.936962)
+    val purmerend = LatLng(52.488515, 4.936962)
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(singapore, 10f)
+        position = CameraPosition.fromLatLngZoom(purmerend, 10f)
     }
     GoogleMap(
         modifier = Modifier.fillMaxSize(),
@@ -55,9 +51,9 @@ fun Map() {
         uiSettings = MapUiSettings(zoomControlsEnabled = false)
     ) {
         Marker(
-            state = MarkerState(position = singapore),
-            title = "Singapore",
-            snippet = "Marker in Singapore"
+            state = MarkerState(position = purmerend),
+            title = "Purmerend",
+            snippet = "Marker in Purmerend"
         )
     }
 }
@@ -110,7 +106,14 @@ private fun MainScreen(mainViewModel: MainViewModel) {
 
         /** Main screen. */
         Map()
-        AppSearchBar(mainViewModel)
+
+        AnimatedVisibility(
+            visible = !newAlarmScreenOpened,
+            enter = slideInVertically(initialOffsetY = { it * 2 }),
+            exit = slideOutVertically(targetOffsetY = { -it })
+        ) {
+            AppSearchBar(mainViewModel)
+        }
 
         /** Add new alarm screen. */
         AddAlarmTab(newAlarmScreenOpened = newAlarmScreenOpened)
