@@ -22,7 +22,7 @@ import com.google.maps.android.compose.*
 import nl.TwoDots.placetowake.addalarm.AddAlarmTab
 import nl.twodots.placetowake.bottomnavigation.BottomBar
 import nl.twodots.placetowake.bottomnavigation.BottomNavGraph
-import nl.twodots.placetowake.models.MainViewModel
+import nl.TwoDots.placetowake.models.viewmodel.MainViewModel
 import nl.twodots.placetowake.searchwidget.AppSearchBar
 import nl.twodots.placetowake.ui.theme.PlaceToWakeTheme
 

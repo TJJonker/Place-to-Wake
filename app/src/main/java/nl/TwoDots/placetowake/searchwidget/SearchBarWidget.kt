@@ -10,17 +10,13 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import nl.twodots.placetowake.R
-import nl.twodots.placetowake.models.MainViewModel
+import nl.TwoDots.placetowake.models.viewmodel.MainViewModel
 import nl.twodots.placetowake.utils.clearFocusOnKeyboardDismiss
 
 @Composable

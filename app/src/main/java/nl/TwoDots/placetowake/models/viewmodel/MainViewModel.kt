@@ -1,4 +1,4 @@
-package nl.twodots.placetowake.models
+package nl.TwoDots.placetowake.models.viewmodel
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State

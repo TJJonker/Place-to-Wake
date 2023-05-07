@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Place to Wake</string>
+
+    <string name="close_icon_description">Close Icon</string>
+
+    <!-- New alarm stringResources -->
+    <string name="new_alarm_title">New Alarm</string>
+    <string name="select_ringtone">Select a ringtone</string>
 </resources>
