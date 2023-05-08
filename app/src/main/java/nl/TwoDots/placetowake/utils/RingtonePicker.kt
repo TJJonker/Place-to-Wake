@@ -10,12 +10,13 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.net.toUri
 import nl.twodots.placetowake.R
 
 /**
- * Class responsible for easy acces to the ringtone picker functionality.
+ * Class responsible for easy access to the ringtone picker functionality.
  */
 class RingtonePicker(context: Context) {
 
@@ -46,7 +47,12 @@ class RingtonePicker(context: Context) {
      * BackingField for the property [currentRingtoneUri]. Should not be accessed.
      * Suggested use of the property [currentRingtoneUri] instead.
      */
-    private var _currentRingtone: MutableState<Uri> = mutableStateOf(RingtoneManager.getActualDefaultRingtoneUri(_currentContext.value, RingtoneManager.TYPE_ALARM))
+    private var _currentRingtone: MutableState<Uri> = mutableStateOf(
+        RingtoneManager.getActualDefaultRingtoneUri(
+            _currentContext.value,
+            RingtoneManager.TYPE_ALARM
+        )
+    )
 
     /**
      * Creates a new Intent instance, containing the RingtonePicker functionality.
@@ -93,12 +99,17 @@ class RingtonePicker(context: Context) {
      */
     @Composable
     fun launch() {
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK)
-                currentRingtoneUri =
-                    it.data!!.extras!!.get(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
-                        .toString().toUri()
-        }.launch(intent)
+        val thing =
+            rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
+                if (it.resultCode == Activity.RESULT_OK)
+                    currentRingtoneUri =
+                        it.data!!.extras!!.get(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
+                            .toString().toUri()
+            }
+
+        SideEffect {
+            thing.launch(intent)
+        }
     }
 
     //endregion

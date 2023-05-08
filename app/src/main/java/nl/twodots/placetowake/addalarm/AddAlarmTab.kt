@@ -1,11 +1,5 @@
 package nl.TwoDots.placetowake.addalarm
 
-import android.app.Activity
-import android.content.Intent
-import android.media.RingtoneManager
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.clickable
@@ -28,7 +22,6 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,15 +37,14 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
 import nl.TwoDots.placetowake.models.viewmodel.AddAlarmViewModel
-import nl.TwoDots.placetowake.utils.RingtonePicker
 import nl.twodots.placetowake.R
 import nl.twodots.placetowake.utils.clearFocusOnKeyboardDismiss
 
 @Composable
 fun AddAlarmTab(newAlarmScreenOpened: Boolean) {
-    val viewModel by remember { mutableStateOf(AddAlarmViewModel()) }
+    val currentContext = LocalContext.current
+    val viewModel by remember { mutableStateOf(AddAlarmViewModel(currentContext)) }
 
     AnimatedVisibility(
         visible = newAlarmScreenOpened,
@@ -93,56 +85,18 @@ private fun Content(modifier: Modifier, viewModel: AddAlarmViewModel) {
             .padding(start = 24.dp, end = 24.dp, top = 12.dp)
             .clearFocusOnKeyboardDismiss()
     ) {
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        )
-        {
-            Text(
-                text = stringResource(id = R.string.new_alarm_title),
-                color = Color.DarkGray
-            )
-            IconButton(
-                onClick = { /*TODO*/ }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = stringResource(id = R.string.close_icon_description),
-                    tint = Color.DarkGray
-                )
-            }
-        }
-
-        val context = LocalContext.current
-
-
-
-        FieldWithHeader(
-            modifier = Modifier
-                .padding(vertical = 8.dp)
-                .fillMaxWidth()
-                .clickable { launcher.launch(intent) },
-            headerTitle = "Ringtone"
-        ) {
-            Text(
-                text = result,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.Black
-            )
-        }
+        Header()
+        AlarmNameField(modifier = modifier, viewModel = viewModel)
+        AlarmTriggerField(viewModel = viewModel)
+        RingtoneField(viewModel = viewModel)
     }
 }
-
 
 @Composable
 private fun FieldWithHeader(
     modifier: Modifier,
     headerTitle: String,
-    content: @Composable () -> Unit,
+    content: @Composable () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -157,8 +111,33 @@ private fun FieldWithHeader(
 }
 
 @Composable
-private fun AlarmNameField(modifier: Modifier){
+private fun Header() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    )
+    {
+        Text(
+            text = stringResource(id = R.string.new_alarm_title),
+            color = Color.DarkGray
+        )
+        IconButton(
+            onClick = { /*TODO*/ }
+        ) {
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = stringResource(id = R.string.close_icon_description),
+                tint = Color.DarkGray
+            )
+        }
+    }
+}
 
+@Composable
+private fun AlarmNameField(modifier: Modifier, viewModel: AddAlarmViewModel) {
 
     OutlinedTextField(
         modifier = modifier
@@ -168,17 +147,17 @@ private fun AlarmNameField(modifier: Modifier){
             textColor = Color.DarkGray
         ),
         singleLine = true,
-        value = alarmName,
-        onValueChange = { text -> alarmName = text },
+        value = viewModel.alarmName.value,
+        onValueChange = { text -> viewModel.SetAlarmName(text) },
         placeholder = {
             Text(
-                text = "Set a name for the alarm",
+                text = stringResource(R.string.Alarm_name_field_placeholder),
                 color = Color.LightGray
             )
         },
         label = {
             Text(
-                text = "Alarm name",
+                text = stringResource(R.string.alarm_name_field_label),
                 color = Color.Gray
             )
         }
@@ -186,23 +165,18 @@ private fun AlarmNameField(modifier: Modifier){
 }
 
 @Composable
-private fun AlarmTriggerField() {
-
-    var currentTriggerOption by remember { mutableStateOf(0) }
-    val triggerOptions = listOf("On Enter", "On Exit")
-    val triggerIcons = listOf(R.drawable.ic_enter, R.drawable.ic_exit)
-
+private fun AlarmTriggerField(viewModel: AddAlarmViewModel) {
     FieldWithHeader(modifier = Modifier.padding(vertical = 8.dp), headerTitle = "Alarm trigger") {
         Column(modifier = Modifier.selectableGroup()) {
-            triggerOptions.forEachIndexed { index, item ->
-                val selected = index == currentTriggerOption
+            viewModel.alarmTriggers.forEach { item ->
+                val selected = item == viewModel.currentAlarmTrigger.value
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
                         .selectable(
                             selected = selected,
-                            onClick = { currentTriggerOption = index },
+                            onClick = { viewModel.setCurrentAlarmTrigger(item) },
                             role = Role.RadioButton
                         )
                 ) {
@@ -219,8 +193,8 @@ private fun AlarmTriggerField() {
                         ) {
 
                             Icon(
-                                painter = painterResource(id = triggerIcons[index]),
-                                contentDescription = "",
+                                painter = painterResource(id = item.icon),
+                                contentDescription = item.iconDescription,
                                 tint = if (selected)
                                     Color.White
                                 else
@@ -229,7 +203,7 @@ private fun AlarmTriggerField() {
                             )
                             Text(
                                 fontWeight = FontWeight.SemiBold,
-                                text = item,
+                                text = item.title,
                                 color = if (selected)
                                     Color.White
                                 else
@@ -241,4 +215,27 @@ private fun AlarmTriggerField() {
             }
         }
     }
+}
+
+@Composable
+private fun RingtoneField(viewModel: AddAlarmViewModel) {
+    var launchRingtonePicker by remember { mutableStateOf(false) }
+    val currentContext = LocalContext.current
+
+    FieldWithHeader(
+        modifier = Modifier
+            .padding(vertical = 8.dp)
+            .fillMaxWidth()
+            .clickable { launchRingtonePicker = true },
+        headerTitle = "Ringtone"
+    ) {
+        Text(
+            text = viewModel.ringtonePicker.currentRingtone.getTitle(currentContext),
+            fontWeight = FontWeight.SemiBold,
+            color = Color.Black
+        )
+    }
+
+    if(launchRingtonePicker)
+        viewModel.ringtonePicker.launch()
 }

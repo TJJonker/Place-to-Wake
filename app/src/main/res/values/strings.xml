@@ -6,4 +6,6 @@
     <!-- New alarm stringResources -->
     <string name="new_alarm_title">New Alarm</string>
     <string name="select_ringtone">Select a ringtone</string>
+    <string name="Alarm_name_field_placeholder">Set a name for the alarm</string>
+    <string name="alarm_name_field_label">Alarm name</string>
 </resources>
