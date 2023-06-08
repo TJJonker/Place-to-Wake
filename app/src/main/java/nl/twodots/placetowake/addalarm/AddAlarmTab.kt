@@ -46,7 +46,7 @@ private fun AlarmTab() {
             elevation = 5.dp,
             modifier = modifier
                 .fillMaxWidth()
-                .fillMaxHeight(.6f),
+                .fillMaxHeight(.7f),
             color = Color.White,
             shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
         ) {
